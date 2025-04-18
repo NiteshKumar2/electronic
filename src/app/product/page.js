@@ -2,7 +2,20 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  CircularProgress,
+  Box,
+  Typography,
+} from "@mui/material";
 
 export default function ElectroPage() {
   const [formData, setFormData] = useState({
@@ -17,12 +30,15 @@ export default function ElectroPage() {
     pichfourth: "",
   });
 
-  const [searchParams, setSearchParams] = useState({ name: "", lengthInInch: "", runningSetWeightInGram: "" });
+  const [searchParams, setSearchParams] = useState({
+    name: "",
+    lengthInInch: "",
+    runningSetWeightInGram: "",
+  });
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
-  // 🔍 Fetch Records
   const fetchRecords = async () => {
     try {
       setLoading(true);
@@ -39,17 +55,14 @@ export default function ElectroPage() {
     fetchRecords();
   }, []);
 
-  // ✏️ Handle Form Input Change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ✏️ Handle Search Input Change
   const handleSearchChange = (e) => {
     setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
   };
 
-  // ✅ Create or Update Record
   const handleSubmit = async () => {
     try {
       if (!formData.name) return toast.error("Name is required!");
@@ -81,7 +94,6 @@ export default function ElectroPage() {
     }
   };
 
-  // 🗑️ Delete Record
   const handleDelete = async (id) => {
     try {
       await axios.delete(`/api/product?id=${id}`);
@@ -92,81 +104,97 @@ export default function ElectroPage() {
     }
   };
 
-  // ✏️ Edit Record
   const handleEdit = (record) => {
     setFormData(record);
     setEditingId(record._id);
   };
 
   return (
-    <div className="p-9 ">
-      <h1 className="text-2xl font-bold mb-4">Electro Management</h1>
+    <Box sx={{ px: 4, py: 6, maxWidth: "1000px", mx: "auto", bgcolor: "#f9fafb", borderRadius: 3, boxShadow: 3 }}>
+      <Typography variant="h3" align="center" fontWeight="bold" gutterBottom>
+        Electro Management
+      </Typography>
 
-      {/* 🎯 Search */}
-      <div className="mb-4 flex gap-4">
-        <TextField label="Name" name="name" value={searchParams.name} onChange={handleSearchChange} />
-        <TextField label="Length (in Inch)" name="lengthInInch" value={searchParams.lengthInInch} onChange={handleSearchChange} />
-        <TextField label="Weight (in Gram)" name="runningSetWeightInGram" value={searchParams.runningSetWeightInGram} onChange={handleSearchChange} />
-        <Button variant="contained" onClick={fetchRecords}>Search</Button>
-      </div>
+      {/* Search Section */}
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb: 4, justifyContent: "center" }}>
+        <TextField label="Name" name="name" value={searchParams.name} onChange={handleSearchChange} sx={{ width: 250 }} />
+        <TextField label="Length (in Inch)" name="lengthInInch" value={searchParams.lengthInInch} onChange={handleSearchChange} sx={{ width: 250 }} />
+        <TextField label="Weight (in Gram)" name="runningSetWeightInGram" value={searchParams.runningSetWeightInGram} onChange={handleSearchChange} sx={{ width: 250 }} />
+        <Button variant="contained" onClick={fetchRecords} sx={{ bgcolor: "blue", ":hover": { bgcolor: "darkblue" } }}>
+          Search
+        </Button>
+      </Box>
 
-      {/* 📋 Form */}
-      <div className="mb-6 p-4 border rounded-md shadow-md">
-        <h2 className="text-xl font-semibold mb-2">{editingId ? "Edit Record" : "Add New Record"}</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <TextField label="Name" name="name" value={formData.name} onChange={handleChange} required />
-          <TextField label="Length (in Inch)" name="lengthInInch" value={formData.lengthInInch} onChange={handleChange} />
-          <TextField label="Round (in Inch)" name="roundInInch" value={formData.roundInInch} onChange={handleChange} />
-          <TextField label="Turns in Tar No" name="runningturnInTarNo" value={formData.runningturnInTarNo} onChange={handleChange} />
-          <TextField label="Weight (in Gram)" name="runningSetWeightInGram" value={formData.runningSetWeightInGram} onChange={handleChange} />
-          <TextField label="Pitch 1" name="pichfirst" value={formData.pichfirst} onChange={handleChange} />
-          <TextField label="Pitch 2" name="pichsecond" value={formData.pichsecond} onChange={handleChange} />
-          <TextField label="Pitch 3" name="pichthird" value={formData.pichthird} onChange={handleChange} />
-          <TextField label="Pitch 4" name="pichfourth" value={formData.pichfourth} onChange={handleChange} />
-        </div>
-        <Button variant="contained" className="mt-4" onClick={handleSubmit}>{editingId ? "Update" : "Create"}</Button>
-      </div>
+      {/* Form Section */}
+      <Box sx={{ bgcolor: "white", p: 3, borderRadius: 2, boxShadow: 2, mb: 4 }}>
+        <Typography variant="h6" fontWeight="600" mb={2}>
+          {editingId ? "Edit Record" : "Add New Record"}
+        </Typography>
+        <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2 }}>
+          {Object.keys(formData).map((key) => (
+            <TextField
+              key={key}
+              label={key.replace(/([A-Z])/g, " $1")}
+              name={key}
+              value={formData[key]}
+              onChange={handleChange}
+              fullWidth
+            />
+          ))}
+        </Box>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          sx={{ mt: 2, bgcolor: "green", ":hover": { bgcolor: "darkgreen" }, color: "white" }}
+        >
+          {editingId ? "Update" : "Create"}
+        </Button>
+      </Box>
 
-      {/* 📋 Data Table */}
-      {loading ? <CircularProgress /> : (
-        <TableContainer component={Paper}>
+      {/* Table Section */}
+      {loading ? (
+        <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <TableContainer component={Paper} elevation={2}>
           <Table>
             <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Length</TableCell>
-                <TableCell>Round</TableCell>
-                <TableCell>Turns</TableCell>
-                <TableCell>Weight</TableCell>
-                <TableCell>Pitch 1</TableCell>
-                <TableCell>Pitch 2</TableCell>
-                <TableCell>Pitch 3</TableCell>
-                <TableCell>Pitch 4</TableCell>
-                <TableCell>Actions</TableCell>
+              <TableRow sx={{ backgroundColor: "#f1f5f9" }}>
+                {["Name", "Length", "Round", "Turns", "Weight", "Pitch 1", "Pitch 2", "Pitch 3", "Pitch 4", "Actions"].map((head) => (
+                  <TableCell key={head} sx={{ fontWeight: 600 }}>
+                    {head}
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {records.map((record) => (
-                <TableRow key={record._id}>
-                  <TableCell>{record.name}</TableCell>
-                  <TableCell>{record.lengthInInch}</TableCell>
-                  <TableCell>{record.roundInInch}</TableCell>
-                  <TableCell>{record.runningturnInTarNo}</TableCell>
-                  <TableCell>{record.runningSetWeightInGram}</TableCell>
-                  <TableCell>{record.pichfirst}</TableCell>
-                  <TableCell>{record.pichsecond}</TableCell>
-                  <TableCell>{record.pichthird}</TableCell>
-                  <TableCell>{record.pichfourth}</TableCell>
-                  <TableCell>
-                    <Button size="small" onClick={() => handleEdit(record)}>Edit</Button>
-                    <Button size="small" color="error" onClick={() => handleDelete(record._id)}>Delete</Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+  {records.map((record) => (
+    <TableRow key={record._id} hover>
+      <TableCell>{record.name}</TableCell>
+      <TableCell>{record.lengthInInch}</TableCell>
+      <TableCell>{record.roundInInch}</TableCell>
+      <TableCell>{record.runningturnInTarNo}</TableCell>
+      <TableCell>{record.runningSetWeightInGram}</TableCell>
+      <TableCell>{record.pichfirst}</TableCell>
+      <TableCell>{record.pichsecond}</TableCell>
+      <TableCell>{record.pichthird}</TableCell>
+      <TableCell>{record.pichfourth}</TableCell>
+      <TableCell>
+        <Button size="small" sx={{ color: "blue" }} onClick={() => handleEdit(record)}>
+          Edit
+        </Button>
+        <Button size="small" sx={{ color: "red" }} onClick={() => handleDelete(record._id)}>
+          Delete
+        </Button>
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody>
+
           </Table>
         </TableContainer>
       )}
-    </div>
+    </Box>
   );
 }
