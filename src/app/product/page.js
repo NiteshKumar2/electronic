@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import {
@@ -35,9 +35,13 @@ export default function ElectroPage() {
     lengthInInch: "",
     runningSetWeightInGram: "",
   });
+
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [showForm, setShowForm] = useState(false); // 🌟 Toggle state
+
+  const formRef = useRef();
 
   const fetchRecords = async () => {
     try {
@@ -89,6 +93,7 @@ export default function ElectroPage() {
 
       setEditingId(null);
       fetchRecords();
+      setShowForm(false); // hide form after submission
     } catch (error) {
       toast.error("Error saving record");
     }
@@ -107,6 +112,8 @@ export default function ElectroPage() {
   const handleEdit = (record) => {
     setFormData(record);
     setEditingId(record._id);
+    setShowForm(true); // auto-show form on edit
+    formRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -125,31 +132,44 @@ export default function ElectroPage() {
         </Button>
       </Box>
 
-      {/* Form Section */}
-      <Box sx={{ bgcolor: "white", p: 3, borderRadius: 2, boxShadow: 2, mb: 4 }}>
-        <Typography variant="h6" fontWeight="600" mb={2}>
-          {editingId ? "Edit Record" : "Add New Record"}
-        </Typography>
-        <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2 }}>
-          {Object.keys(formData).map((key) => (
-            <TextField
-              key={key}
-              label={key.replace(/([A-Z])/g, " $1")}
-              name={key}
-              value={formData[key]}
-              onChange={handleChange}
-              fullWidth
-            />
-          ))}
-        </Box>
+      {/* Toggle Add/Edit Form Button */}
+      <Box sx={{ textAlign: "center", mb: 2 }}>
         <Button
-          variant="contained"
-          onClick={handleSubmit}
-          sx={{ mt: 2, bgcolor: "green", ":hover": { bgcolor: "darkgreen" }, color: "white" }}
+          variant="outlined"
+          onClick={() => setShowForm(!showForm)}
+          sx={{ color: "black", borderColor: "gray", ":hover": { bgcolor: "#f0f0f0" } }}
         >
-          {editingId ? "Update" : "Create"}
+          {showForm ? "Hide Form" : editingId ? "Edit Record" : "Add New Record"}
         </Button>
       </Box>
+
+      {/* Form Section */}
+      {showForm && (
+        <Box ref={formRef} sx={{ bgcolor: "white", p: 3, borderRadius: 2, boxShadow: 2, mb: 4 }}>
+          <Typography variant="h6" fontWeight="600" mb={2}>
+            {editingId ? "Edit Record" : "Add New Record"}
+          </Typography>
+          <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2 }}>
+            {Object.keys(formData).map((key) => (
+              <TextField
+                key={key}
+                label={key.replace(/([A-Z])/g, " $1")}
+                name={key}
+                value={formData[key]}
+                onChange={handleChange}
+                fullWidth
+              />
+            ))}
+          </Box>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            sx={{ mt: 2, bgcolor: "green", ":hover": { bgcolor: "darkgreen" }, color: "white" }}
+          >
+            {editingId ? "Update" : "Create"}
+          </Button>
+        </Box>
+      )}
 
       {/* Table Section */}
       {loading ? (
@@ -169,29 +189,34 @@ export default function ElectroPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-  {records.map((record) => (
-    <TableRow key={record._id} hover>
-      <TableCell>{record.name}</TableCell>
-      <TableCell>{record.lengthInInch}</TableCell>
-      <TableCell>{record.roundInInch}</TableCell>
-      <TableCell>{record.runningturnInTarNo}</TableCell>
-      <TableCell>{record.runningSetWeightInGram}</TableCell>
-      <TableCell>{record.pichfirst}</TableCell>
-      <TableCell>{record.pichsecond}</TableCell>
-      <TableCell>{record.pichthird}</TableCell>
-      <TableCell>{record.pichfourth}</TableCell>
-      <TableCell>
-        <Button size="small" sx={{ color: "blue" }} onClick={() => handleEdit(record)}>
-          Edit
-        </Button>
-        <Button size="small" sx={{ color: "red" }} onClick={() => handleDelete(record._id)}>
-          Delete
-        </Button>
-      </TableCell>
-    </TableRow>
-  ))}
-</TableBody>
-
+              {records.map((record) => (
+                <TableRow
+                  key={record._id}
+                  hover
+                  sx={{
+                    backgroundColor: editingId === record._id ? "#e0f7fa" : "inherit",
+                  }}
+                >
+                  <TableCell>{record.name}</TableCell>
+                  <TableCell>{record.lengthInInch}</TableCell>
+                  <TableCell>{record.roundInInch}</TableCell>
+                  <TableCell>{record.runningturnInTarNo}</TableCell>
+                  <TableCell>{record.runningSetWeightInGram}</TableCell>
+                  <TableCell>{record.pichfirst}</TableCell>
+                  <TableCell>{record.pichsecond}</TableCell>
+                  <TableCell>{record.pichthird}</TableCell>
+                  <TableCell>{record.pichfourth}</TableCell>
+                  <TableCell>
+                    <Button size="small" sx={{ color: "blue" }} onClick={() => handleEdit(record)}>
+                      Edit
+                    </Button>
+                    <Button size="small" sx={{ color: "red" }} onClick={() => handleDelete(record._id)}>
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
           </Table>
         </TableContainer>
       )}
