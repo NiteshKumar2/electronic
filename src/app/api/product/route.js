@@ -8,36 +8,52 @@ export async function POST(request) {
     await connect();
 
     const reqBody = await request.json();
-    const {   
-      name, 
-      lengthInInch, 
-      roundInInch, 
-      runningturnInTarNo, 
-      runningSetWeightInGram, 
-      pichfirst,
-      pichsecond,
-      pichthird,
-      pichfourth 
+    const {
+      name,
+      slot,
+      connectionType,
+      runningWireGauge,
+      rpm,
+      length,
+      breadth,
+      runningPintch,
+      startingPintch,
+      runnigSetWeight,
+      startingSetWeight,
+      startingWireGauge,
     } = reqBody;
 
     if (!name) {
-      return NextResponse.json({ success: false, error: "Name is required" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: "Name is required" },
+        { status: 400 }
+      );
     }
 
     const existingRecord = await electroModel.findOne({ name }).lean();
     if (existingRecord) {
-      return NextResponse.json({ success: false, error: "Record already exists" }, { status: 409 });
+      return NextResponse.json(
+        { success: false, error: "Record already exists" },
+        { status: 409 }
+      );
     }
 
     const newRecord = await electroModel.create(reqBody);
 
     return NextResponse.json(
-      { success: true, message: "Record created successfully", data: newRecord },
+      {
+        success: true,
+        message: "Record created successfully",
+        data: newRecord,
+      },
       { status: 201 }
     );
   } catch (error) {
     console.error("Error creating record:", error);
-    return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
@@ -47,13 +63,13 @@ export async function GET() {
     await connect();
     const records = await electroModel.find().lean();
 
-    return NextResponse.json(
-      { success: true, data: records },
-      { status: 200 }
-    );
+    return NextResponse.json({ success: true, data: records }, { status: 200 });
   } catch (error) {
     console.error("Error fetching records:", error);
-    return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
@@ -63,25 +79,42 @@ export async function PUT(request) {
     await connect();
 
     const reqBody = await request.json();
-    const { id, ...updateFields } = reqBody; // Extract `id` and update fields
+    const { id, ...updateFields } = reqBody;
 
     if (!id) {
-      return NextResponse.json({ success: false, error: "ID is required" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: "ID is required" },
+        { status: 400 }
+      );
     }
 
-    const updatedRecord = await electroModel.findByIdAndUpdate(id, { $set: updateFields }, { new: true, runValidators: true });
+    const updatedRecord = await electroModel.findByIdAndUpdate(
+      id,
+      { $set: updateFields },
+      { new: true, runValidators: true }
+    );
 
     if (!updatedRecord) {
-      return NextResponse.json({ success: false, error: "Record not found" }, { status: 404 });
+      return NextResponse.json(
+        { success: false, error: "Record not found" },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json(
-      { success: true, message: "Record updated successfully", data: updatedRecord },
+      {
+        success: true,
+        message: "Record updated successfully",
+        data: updatedRecord,
+      },
       { status: 200 }
     );
   } catch (error) {
     console.error("Error updating record:", error);
-    return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
@@ -94,13 +127,19 @@ export async function DELETE(request) {
     const id = searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json({ success: false, error: "ID is required" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: "ID is required" },
+        { status: 400 }
+      );
     }
 
     const deletedRecord = await electroModel.findByIdAndDelete(id);
 
     if (!deletedRecord) {
-      return NextResponse.json({ success: false, error: "Record not found" }, { status: 404 });
+      return NextResponse.json(
+        { success: false, error: "Record not found" },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json(
@@ -109,6 +148,9 @@ export async function DELETE(request) {
     );
   } catch (error) {
     console.error("Error deleting record:", error);
-    return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

@@ -3,16 +3,20 @@ import mongoose from "mongoose";
 const ElectroSchema = new mongoose.Schema(
   {
     name: { type: String, required: true }, // Name of the user
-    lengthInInch: { type: Number }, 
-    roundInInch: { type: Number }, 
-    runningturnInTarNo: { type: Number }, 
-    runningSetWeightInGram: { type: Number }, 
-    pichfirst: { type: Number },
-    pichsecond: { type: Number },
-    pichthird: { type: Number},
-    pichfourth: { type: Number },
+    slot: { type: String },
+    connectionType: { type: String },
+    runningWireGauge: { type: String },
+    rpm: { type: String },
+    length: { type: String },
+    breadth: { type: String },
+    runningPintch: { type: String },
+    startingPintch: { type: String },
+    runningSetWeight: { type: String },
+    startingSetWeight: { type: String },
+    startingWireGauge: { type: String },
   },
   { timestamps: true } // Automatically adds createdAt and updatedAt fields
 );
 
-export default mongoose.models.Electro || mongoose.model("Electro", ElectroSchema);
+export default mongoose.models.Electro ||
+  mongoose.model("Electro", ElectroSchema);

@@ -9,32 +9,38 @@ export async function GET(request) {
 
     const { searchParams } = new URL(request.url);
     const name = searchParams.get("name");
-    const lengthInInch = searchParams.get("lengthInInch");
-    const runningSetWeightInGram = searchParams.get("runningSetWeightInGram");
+    const length = searchParams.get("length");
+    const runningSetWeight = searchParams.get("runningSetWeight");
 
     // Validation: Name is required
     if (!name) {
-      return NextResponse.json({ success: false, error: "Name is required" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: "Name is required" },
+        { status: 400 }
+      );
     }
 
     // Build the query dynamically
-    let query = { name: new RegExp(name, "i") }; // Case-insensitive search for name
+    let query = {
+      name: new RegExp(name, "i"), // Case-insensitive search for name
+    };
 
-    if (lengthInInch) {
-      query.lengthInInch = Number(lengthInInch);
+    if (length) {
+      query.length = new RegExp(length, "i"); // Case-insensitive search for length
     }
-    if (runningSetWeightInGram) {
-      query.runningSetWeightInGram = Number(runningSetWeightInGram);
+
+    if (runningSetWeight) {
+      query.runningSetWeight = new RegExp(runningSetWeight, "i");
     }
 
     const results = await electroModel.find(query).lean();
 
-    return NextResponse.json(
-      { success: true, data: results },
-      { status: 200 }
-    );
+    return NextResponse.json({ success: true, data: results }, { status: 200 });
   } catch (error) {
     console.error("Error in search API:", error);
-    return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

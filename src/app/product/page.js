@@ -18,31 +18,37 @@ import {
 } from "@mui/material";
 
 export default function ElectroPage() {
+  // 1️⃣ Form Data
   const [formData, setFormData] = useState({
     name: "",
-    lengthInInch: "",
-    roundInInch: "",
-    runningturnInTarNo: "",
-    runningSetWeightInGram: "",
-    pichfirst: "",
-    pichsecond: "",
-    pichthird: "",
-    pichfourth: "",
+    slot: "",
+    connectionType: "",
+    runningWireGauge: "",
+    rpm: "",
+    length: "",
+    breadth: "",
+    runningPintch: "",
+    startingPintch: "",
+    runningSetWeight: "",
+    startingSetWeight: "",
+    startingWireGauge: "",
   });
 
+  // 2️⃣ Search Filters
   const [searchParams, setSearchParams] = useState({
     name: "",
-    lengthInInch: "",
-    runningSetWeightInGram: "",
+    length: "",
+    runningSetWeight: "",
   });
 
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [showForm, setShowForm] = useState(false); // 🌟 Toggle state
+  const [showForm, setShowForm] = useState(false);
 
   const formRef = useRef();
 
+  // 3️⃣ Fetch Records
   const fetchRecords = async () => {
     try {
       setLoading(true);
@@ -59,6 +65,7 @@ export default function ElectroPage() {
     fetchRecords();
   }, []);
 
+  // 4️⃣ Handle Changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -67,6 +74,7 @@ export default function ElectroPage() {
     setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
   };
 
+  // 5️⃣ Submit Form
   const handleSubmit = async () => {
     try {
       if (!formData.name) return toast.error("Name is required!");
@@ -79,21 +87,25 @@ export default function ElectroPage() {
         toast.success("Record Created!");
       }
 
+      // Reset form
       setFormData({
         name: "",
-        lengthInInch: "",
-        roundInInch: "",
-        runningturnInTarNo: "",
-        runningSetWeightInGram: "",
-        pichfirst: "",
-        pichsecond: "",
-        pichthird: "",
-        pichfourth: "",
+        slot: "",
+        connectionType: "",
+        runningWireGauge: "",
+        rpm: "",
+        length: "",
+        breadth: "",
+        runningPintch: "",
+        startingPintch: "",
+        runningSetWeight: "",
+        startingSetWeight: "",
+        startingWireGauge: "",
       });
 
       setEditingId(null);
       fetchRecords();
-      setShowForm(false); // hide form after submission
+      setShowForm(false);
     } catch (error) {
       toast.error("Error saving record");
     }
@@ -112,44 +124,101 @@ export default function ElectroPage() {
   const handleEdit = (record) => {
     setFormData(record);
     setEditingId(record._id);
-    setShowForm(true); // auto-show form on edit
+    setShowForm(true);
     formRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <Box sx={{ px: 4, py: 6, maxWidth: "1000px", mx: "auto", bgcolor: "#f9fafb", borderRadius: 3, boxShadow: 3 }}>
+    <Box
+      sx={{
+        px: 4,
+        py: 6,
+        maxWidth: "1000px",
+        mx: "auto",
+        bgcolor: "#f9fafb",
+        borderRadius: 3,
+        boxShadow: 3,
+      }}
+    >
       <Typography variant="h3" align="center" fontWeight="bold" gutterBottom>
         Electro Management
       </Typography>
 
-      {/* Search Section */}
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb: 4, justifyContent: "center" }}>
-        <TextField label="Name" name="name" value={searchParams.name} onChange={handleSearchChange} sx={{ width: 250 }} />
-        <TextField label="Length (in Inch)" name="lengthInInch" value={searchParams.lengthInInch} onChange={handleSearchChange} sx={{ width: 250 }} />
-        <TextField label="Weight (in Gram)" name="runningSetWeightInGram" value={searchParams.runningSetWeightInGram} onChange={handleSearchChange} sx={{ width: 250 }} />
-        <Button variant="contained" onClick={fetchRecords} sx={{ bgcolor: "blue", ":hover": { bgcolor: "darkblue" } }}>
+      {/* 🔎 Search */}
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 2,
+          mb: 4,
+          justifyContent: "center",
+        }}
+      >
+        <TextField
+          label="Name"
+          name="name"
+          value={searchParams.name}
+          onChange={handleSearchChange}
+          sx={{ width: 250 }}
+        />
+        <TextField
+          label="Length"
+          name="length"
+          value={searchParams.length}
+          onChange={handleSearchChange}
+          sx={{ width: 250 }}
+        />
+        <TextField
+          label="Set Weight"
+          name="runningSetWeight"
+          value={searchParams.runningSetWeight}
+          onChange={handleSearchChange}
+          sx={{ width: 250 }}
+        />
+        <Button
+          variant="contained"
+          onClick={fetchRecords}
+          sx={{ bgcolor: "blue", ":hover": { bgcolor: "darkblue" } }}
+        >
           Search
         </Button>
       </Box>
 
-      {/* Toggle Add/Edit Form Button */}
+      {/* ➕ Toggle Add/Edit Form */}
       <Box sx={{ textAlign: "center", mb: 2 }}>
         <Button
           variant="outlined"
           onClick={() => setShowForm(!showForm)}
-          sx={{ color: "black", borderColor: "gray", ":hover": { bgcolor: "#f0f0f0" } }}
+          sx={{
+            color: "black",
+            borderColor: "gray",
+            ":hover": { bgcolor: "#f0f0f0" },
+          }}
         >
-          {showForm ? "Hide Form" : editingId ? "Edit Record" : "Add New Record"}
+          {showForm
+            ? "Hide Form"
+            : editingId
+            ? "Edit Record"
+            : "Add New Record"}
         </Button>
       </Box>
 
-      {/* Form Section */}
+      {/* 📝 Form */}
       {showForm && (
-        <Box ref={formRef} sx={{ bgcolor: "white", p: 3, borderRadius: 2, boxShadow: 2, mb: 4 }}>
+        <Box
+          ref={formRef}
+          sx={{ bgcolor: "white", p: 3, borderRadius: 2, boxShadow: 2, mb: 4 }}
+        >
           <Typography variant="h6" fontWeight="600" mb={2}>
             {editingId ? "Edit Record" : "Add New Record"}
           </Typography>
-          <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2 }}>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: 2,
+            }}
+          >
             {Object.keys(formData).map((key) => (
               <TextField
                 key={key}
@@ -164,14 +233,19 @@ export default function ElectroPage() {
           <Button
             variant="contained"
             onClick={handleSubmit}
-            sx={{ mt: 2, bgcolor: "green", ":hover": { bgcolor: "darkgreen" }, color: "white" }}
+            sx={{
+              mt: 2,
+              bgcolor: "green",
+              ":hover": { bgcolor: "darkgreen" },
+              color: "white",
+            }}
           >
             {editingId ? "Update" : "Create"}
           </Button>
         </Box>
       )}
 
-      {/* Table Section */}
+      {/* 📊 Table */}
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
           <CircularProgress />
@@ -181,7 +255,21 @@ export default function ElectroPage() {
           <Table>
             <TableHead>
               <TableRow sx={{ backgroundColor: "#f1f5f9" }}>
-                {["Name", "Length", "Round", "Turns", "Weight", "Pitch 1", "Pitch 2", "Pitch 3", "Pitch 4", "Actions"].map((head) => (
+                {[
+                  "Name",
+                  "Slot",
+                  "Connection Type",
+                  "Running Wire Gauge",
+                  "RPM",
+                  "Length",
+                  "Breadth",
+                  "Running Pitch",
+                  "Starting Pitch",
+                  "Running Set Weight",
+                  "Starting Set Weight",
+                  "Starting Wire Gauge",
+                  "Actions",
+                ].map((head) => (
                   <TableCell key={head} sx={{ fontWeight: 600 }}>
                     {head}
                   </TableCell>
@@ -194,23 +282,35 @@ export default function ElectroPage() {
                   key={record._id}
                   hover
                   sx={{
-                    backgroundColor: editingId === record._id ? "#e0f7fa" : "inherit",
+                    backgroundColor:
+                      editingId === record._id ? "#e0f7fa" : "inherit",
                   }}
                 >
                   <TableCell>{record.name}</TableCell>
-                  <TableCell>{record.lengthInInch}</TableCell>
-                  <TableCell>{record.roundInInch}</TableCell>
-                  <TableCell>{record.runningturnInTarNo}</TableCell>
-                  <TableCell>{record.runningSetWeightInGram}</TableCell>
-                  <TableCell>{record.pichfirst}</TableCell>
-                  <TableCell>{record.pichsecond}</TableCell>
-                  <TableCell>{record.pichthird}</TableCell>
-                  <TableCell>{record.pichfourth}</TableCell>
+                  <TableCell>{record.slot}</TableCell>
+                  <TableCell>{record.connectionType}</TableCell>
+                  <TableCell>{record.runningWireGauge}</TableCell>
+                  <TableCell>{record.rpm}</TableCell>
+                  <TableCell>{record.length}</TableCell>
+                  <TableCell>{record.breadth}</TableCell>
+                  <TableCell>{record.runningPintch}</TableCell>
+                  <TableCell>{record.startingPintch}</TableCell>
+                  <TableCell>{record.runningSetWeight}</TableCell>
+                  <TableCell>{record.startingSetWeight}</TableCell>
+                  <TableCell>{record.startingWireGauge}</TableCell>
                   <TableCell>
-                    <Button size="small" sx={{ color: "blue" }} onClick={() => handleEdit(record)}>
+                    <Button
+                      size="small"
+                      sx={{ color: "blue" }}
+                      onClick={() => handleEdit(record)}
+                    >
                       Edit
                     </Button>
-                    <Button size="small" sx={{ color: "red" }} onClick={() => handleDelete(record._id)}>
+                    <Button
+                      size="small"
+                      sx={{ color: "red" }}
+                      onClick={() => handleDelete(record._id)}
+                    >
                       Delete
                     </Button>
                   </TableCell>
