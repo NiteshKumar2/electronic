@@ -26,9 +26,21 @@ export default function ElectroPage() {
     runningWireGauge: "",
     rpm: "",
     length: "",
+    runningLength: "",
+    startingLength: "",
     breadth: "",
-    runningPintch: "",
-    startingPintch: "",
+    runningPintchOne: "",
+    runningPintchTwo: "",
+    runningPintchThree: "",
+    runningPintchFour: "",
+    runningPintchFive: "",
+    runningPintchSix: "",
+    startingPintchOne: "",
+    startingPintchTwo: "",
+    startingPintchThree: "",
+    startingPintchFour: "",
+    startingPintchFive: "",
+    startingPintchSix: "",
     runningSetWeight: "",
     startingSetWeight: "",
     startingWireGauge: "",
@@ -95,9 +107,21 @@ export default function ElectroPage() {
         runningWireGauge: "",
         rpm: "",
         length: "",
+        runningLength: "",
+        startingLength: "",
         breadth: "",
-        runningPintch: "",
-        startingPintch: "",
+        runningPintchOne: "",
+        runningPintchTwo: "",
+        runningPintchThree: "",
+        runningPintchFour: "",
+        runningPintchFive: "",
+        runningPintchSix: "",
+        startingPintchOne: "",
+        startingPintchTwo: "",
+        startingPintchThree: "",
+        startingPintchFour: "",
+        startingPintchFive: "",
+        startingPintchSix: "",
         runningSetWeight: "",
         startingSetWeight: "",
         startingWireGauge: "",
@@ -262,9 +286,21 @@ export default function ElectroPage() {
                   "Running Wire Gauge",
                   "RPM",
                   "Length",
+                  "Running Length",
+                  "Starting Length",
                   "Breadth",
-                  "Running Pitch",
-                  "Starting Pitch",
+                  "Running Pitch One",
+                  "Running Pitch Two",
+                  "Running Pitch Three",
+                  "Running Pitch Four",
+                  "Running Pitch Five",
+                  "Running Pitch Six",
+                  "Starting Pitch One",
+                  "Starting Pitch Two",
+                  "Starting Pitch Three",
+                  "Starting Pitch Four",
+                  "Starting Pitch Five",
+                  "Starting Pitch six",
                   "Running Set Weight",
                   "Starting Set Weight",
                   "Starting Wire Gauge",
@@ -292,9 +328,21 @@ export default function ElectroPage() {
                   <TableCell>{record.runningWireGauge}</TableCell>
                   <TableCell>{record.rpm}</TableCell>
                   <TableCell>{record.length}</TableCell>
+                  <TableCell>{record.runningLength}</TableCell>
+                  <TableCell>{record.startingLength}</TableCell>
                   <TableCell>{record.breadth}</TableCell>
-                  <TableCell>{record.runningPintch}</TableCell>
-                  <TableCell>{record.startingPintch}</TableCell>
+                  <TableCell>{record.runningPintchOne}</TableCell>
+                  <TableCell>{record.runningPintchTwo}</TableCell>
+                  <TableCell>{record.runningPintchThree}</TableCell>
+                  <TableCell>{record.runningPintchFour}</TableCell>
+                  <TableCell>{record.runningPintchFive}</TableCell>
+                  <TableCell>{record.runningPintchSix}</TableCell>
+                  <TableCell>{record.startingPintchOne}</TableCell>
+                  <TableCell>{record.startingPintchTwo}</TableCell>
+                  <TableCell>{record.startingPintchThree}</TableCell>
+                  <TableCell>{record.startingPintchFour}</TableCell>
+                  <TableCell>{record.startingPintchFive}</TableCell>
+                  <TableCell>{record.startingPintchSix}</TableCell>
                   <TableCell>{record.runningSetWeight}</TableCell>
                   <TableCell>{record.startingSetWeight}</TableCell>
                   <TableCell>{record.startingWireGauge}</TableCell>
